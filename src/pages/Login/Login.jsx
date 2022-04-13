@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { auth } from '../../Auth/firebase.init'
 
 const Login = () => {
@@ -11,11 +11,19 @@ const Login = () => {
     useSignInWithEmailAndPassword(auth)
 
   const navigate = useNavigate()
-  
-  //?signup er error dey..but ekhane error dey na
-  if (user) {
-    navigate('/store')
-  }
+  const location = useLocation()
+
+  /**
+ * *dont need this beacuse we using redirect to path after login
+ *    useEffect(() => {
+    if (user) {
+      navigate('/')
+    }
+  }, [navigate, user]) */
+
+  // if (loading) {
+  //   return <h3>loading please wait...</h3>
+  // }
 
   const handleEmailBlur = (e) => {
     setEmail(e.target.value)
@@ -26,7 +34,10 @@ const Login = () => {
   }
 
   const handleLogin = (e) => {
-    signInWithEmailAndPassword(email, password)
+    const from = location.state?.from?.pathname || '/'
+    signInWithEmailAndPassword(email, password).then(() => {
+      navigate(from, { replace: true })
+    })
   }
 
   const handleSubmit = (e) => {
@@ -35,7 +46,7 @@ const Login = () => {
 
   return (
     <>
-    <h2 className='text-center'>Have an account</h2>
+      <h2 className='text-center'>Have an account</h2>
       <Form className='w-50 mx-auto mt-5' onSubmit={handleSubmit}>
         <Form.Group className='mb-3' controlId='formBasicEmail'>
           <Form.Label>Email address</Form.Label>
