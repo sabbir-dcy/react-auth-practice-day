@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "node_modules": true,
+    "**/robots.txt": true,
+    "**/manifest.json": true,
+    "**/reportWebVitals.js": true,
+    "**/package-lock.json": true
+  }
+}
